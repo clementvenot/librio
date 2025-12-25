@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class LibrioBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LibrioBackendApplication.class, args);
+		System.out.println("test");
+		SpringApplication.run(LibrioBackendApplication.class, args); 
+		
 	}
 
 }
