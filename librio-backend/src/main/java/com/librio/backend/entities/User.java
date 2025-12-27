@@ -21,11 +21,11 @@ public class User {
 	
 	@Email(message = "Email invalide")
     @NotBlank(message = "Email obligatoire")
-	@Column(name = "email", nullable = true, unique = true, length = 255 )
+	@Column(name = "email", nullable = false, unique = true, length = 255 )
 	private String email;
 	
     @NotBlank(message = "Mot de passe obligatoire")
-	@Column(name = "password", nullable = true, length = 255)
+	@Column(name = "password", nullable = false, length = 255)
 	private String password;
 	
 	// constructor
