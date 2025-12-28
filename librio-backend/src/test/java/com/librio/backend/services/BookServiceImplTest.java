@@ -21,10 +21,10 @@ class BookServiceImplTest {
 
     @Test
     void create_shouldPersist_whenExternalIdNotExists() {
-        Book b = bookService.create("evQiygAACAAJ", "title");
+        Book b = bookService.create("evQiygAA", "title");
         assertNotNull(b.getId());
-        assertTrue(bookService.existsByExternalId("evQiygAACAAJ"));
-        assertThat(bookService.findByExternalId("evQiygAACAAJ")).isPresent();
+        assertTrue(bookService.existsByExternalId("evQiygAA"));
+        assertThat(bookService.findByExternalId("evQiygAA")).isPresent();
     }
    
     @Test

@@ -23,12 +23,12 @@ class UserServiceImplTest {
 	@Test
 	void register_should_CreateUser_when_EmailNotExists() {
 
-		User saved = userService.register("toto@mail.com", "secret");
+		User saved = userService.register("titi@mail.com", "secret");
 	
 	    assertNotNull(saved.getId());
-	    assertThat(saved.getEmail()).isEqualTo("toto@mail.com");
-	    assertTrue(userService.existsByEmail("toto@mail.com"));
-	    assertThat(userService.findByEmail("toto@mail.com")).isPresent();
+	    assertThat(saved.getEmail()).isEqualTo("titi@mail.com");
+	    assertTrue(userService.existsByEmail("titi@mail.com"));
+	    assertThat(userService.findByEmail("titi@mail.com")).isPresent();
 	}
 
 
