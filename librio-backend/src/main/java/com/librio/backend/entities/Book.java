@@ -46,6 +46,11 @@ public class Book {
     
     // constructor 
     protected Book() {}
+    
+    public Book(String external_id,String title) {
+    	this.externalId = external_id;
+    	this.title = title;
+    }
 
     // Getters/Setters
 

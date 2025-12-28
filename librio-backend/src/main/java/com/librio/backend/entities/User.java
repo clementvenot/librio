@@ -32,6 +32,11 @@ public class User {
 	
 	protected User() {}
 	
+	public User(String email, String pwd) {
+		this.email = email;
+		this.password = pwd;
+	}
+	
 	// getters / setters
 	
 	public Long getId() { return id;}
