@@ -45,7 +45,7 @@ public class Book {
     private String imageMedium;
     
     // constructor 
-    protected Book() {}
+    public Book() {}
     
     public Book(String external_id,String title) {
     	this.externalId = external_id;

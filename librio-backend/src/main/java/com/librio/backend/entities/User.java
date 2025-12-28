@@ -29,8 +29,7 @@ public class User {
 	private String password;
 	
 	// constructor
-	
-	protected User() {}
+	public User() {}
 	
 	public User(String email, String pwd) {
 		this.email = email;
