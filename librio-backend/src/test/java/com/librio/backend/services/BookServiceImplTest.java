@@ -50,7 +50,6 @@ class BookServiceImplTest {
         assertEquals(321, b.getPageCount());
         assertEquals(4L, b.getAverageRating());
         assertEquals("https://example.com/img.jpg", b.getImageMedium());
-
         assertTrue(bookService.existsByExternalId("evQiygAA"));
         assertThat(bookService.findByExternalId("evQiygAA")).isPresent();
     }
