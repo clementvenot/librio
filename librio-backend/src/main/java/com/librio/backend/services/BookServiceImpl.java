@@ -2,6 +2,8 @@ package com.librio.backend.services;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+
+import com.librio.backend.dto.book.CreateBookRequestDto;
 import com.librio.backend.entities.Book;
 import com.librio.backend.repositories.BookRepository;
 import org.springframework.transaction.annotation.Transactional; 
@@ -18,13 +20,23 @@ class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book create(String externalId, String title) {
-        if (bookRepository.existsByExternalId(externalId)) {
-            throw new IllegalArgumentException("ExternalId déjà utilisé: " + externalId);
-        }
-        Book b = new Book(externalId,title);
-        return bookRepository.save(b);
-    }
+    public Book create(CreateBookRequestDto req) {        
+    	if (bookRepository.existsByExternalId(req.getExternalId())) {            
+    		throw new IllegalArgumentException("ExternalId déjà utilisé: " + req.getExternalId());       
+    		}        
+    	Book b = new Book(req.getExternalId(), req.getTitle());        
+    	b.setSubtitle(req.getSubtitle());        
+    	b.setAuthor(req.getAuthor());        
+    	b.setPublisher(req.getPublisher());        
+    	b.setPublishedDate(req.getPublishedDate());        
+    	b.setCategories(req.getCategories());        
+    	b.setPageCount(req.getPageCount());        
+    	b.setAverageRating(req.getAverageRating());        
+    	b.setImageMedium(req.getImageMedium());        
+    	
+    	return bookRepository.save(b);  
+    	
+    	}
 
     @Override
     @Transactional(readOnly = true)
