@@ -1,18 +1,19 @@
-
 package com.librio.backend.mappers;
 
 import com.librio.backend.dto.book.BigListBookResponseDto;
 import com.librio.backend.dto.book.CreateBookRequestDto;
 import com.librio.backend.entities.Book;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class BookMapperTest {
 
-    // Instanciation directe du mapper via MapStruct, sans Spring
-    private final BookMapper mapper = Mappers.getMapper(BookMapper.class);
+    @Autowired
+    private BookMapper mapper;
 
     @Test
     void toEntity_shouldIgnoreId_andCopyFields() {
@@ -76,12 +77,16 @@ class BookMapperTest {
 
         CreateBookRequestDto patch = new CreateBookRequestDto();
         patch.setTitle("New title");
-        patch.setAuthor(null); // doit être ignoré par le mapping (NullValuePropertyMappingStrategy.IGNORE)
+        patch.setAuthor(null);
 
         mapper.updateEntityFromCreateDto(patch, entity);
 
         assertEquals("EXT-3", entity.getExternalId());
         assertEquals("New title", entity.getTitle());
-        assertEquals("Old author", entity.getAuthor(), "Le champ null dans le DTO ne doit pas écraser la valeur existante");
+        assertEquals(
+                "Old author",
+                entity.getAuthor(),
+                "Le champ null dans le DTO ne doit pas écraser la valeur existante"
+        );
     }
 }

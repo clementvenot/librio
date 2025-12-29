@@ -11,10 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test d'intégration léger : injection du bean MapStruct généré via Spring.
- * Nécessite que l'annotation processing MapStruct soit active (OK dans ton POM).
- */
 @SpringBootTest(classes = LibrioBackendApplication.class)
 class UserMapperTest {
 
@@ -23,15 +19,13 @@ class UserMapperTest {
 
     @Test
     void toEntity_shouldIgnoreId_andCopyFields() {
-        // Arrange
-        CreateUserRequestDto dto = new CreateUserRequestDto();
-        dto.setEmail("user@example.com");
-        dto.setPassword("clearPwd"); // le hashing se fait côté service
 
-        // Act
+    	CreateUserRequestDto dto = new CreateUserRequestDto();
+        dto.setEmail("user@example.com");
+        dto.setPassword("clearPwd"); 
+
         User entity = mapper.toEntity(dto);
 
-        // Assert
         assertNull(entity.getId());
         assertEquals("user@example.com", entity.getEmail());
         assertEquals("clearPwd", entity.getPassword());
@@ -39,11 +33,10 @@ class UserMapperTest {
 
     @Test
     void toLoginResponse_shouldBuildDto() {
-        // Act
-        LoginResponseDto ok = mapper.toLoginResponse(true, "Authentification réussie");
+
+    	LoginResponseDto ok = mapper.toLoginResponse(true, "Authentification réussie");
         LoginResponseDto ko = mapper.toLoginResponse(false, "Erreur");
 
-        // Assert
         assertTrue(ok.isAuthenticated());
         assertEquals("Authentification réussie", ok.getMessage());
 
@@ -53,45 +46,37 @@ class UserMapperTest {
 
     @Test
     void toUserExistResponse_shouldBuildDto() {
-        // Act
-        UserExistResponseDto resp = mapper.toUserExistResponse("user@example.com", true);
 
-        // Assert
+    	UserExistResponseDto resp = mapper.toUserExistResponse("user@example.com", true);
+
         assertEquals("user@example.com", resp.getEmail());
         assertTrue(resp.isExists());
     }
 
-    // --- tests additionnels utiles ---
-
     @Test
     void updateEntityFromCreateDto_shouldIgnoreNulls_andKeepExistingValues() {
-        // Arrange: entité existante en base (simulée)
-        User entity = new User("old@example.com", "hashedOldPwd");
 
-        // DTO de mise à jour partielle : on change l'email, on laisse password à null
+    	User entity = new User("old@example.com", "hashedOldPwd");
+
         CreateUserRequestDto patch = new CreateUserRequestDto();
         patch.setEmail("new@example.com");
-        patch.setPassword(null); // doit être ignoré par le mapper
+        patch.setPassword(null); 
 
-        // Act
         mapper.updateEntityFromCreateDto(patch, entity);
 
-        // Assert
         assertEquals("new@example.com", entity.getEmail());
-        assertEquals("hashedOldPwd", entity.getPassword()); // inchangé
+        assertEquals("hashedOldPwd", entity.getPassword()); 
     }
 
     @Test
     void toEntity_shouldNotSetId_andAcceptMinimalFields() {
-        // Arrange
-        CreateUserRequestDto dto = new CreateUserRequestDto();
+
+    	CreateUserRequestDto dto = new CreateUserRequestDto();
         dto.setEmail("minimal@example.com");
         dto.setPassword("pwd");
 
-        // Act
         User entity = mapper.toEntity(dto);
 
-        // Assert
         assertNull(entity.getId());
         assertEquals("minimal@example.com", entity.getEmail());
         assertEquals("pwd", entity.getPassword());

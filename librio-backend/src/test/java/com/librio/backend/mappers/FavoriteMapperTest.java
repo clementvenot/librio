@@ -22,14 +22,11 @@ class FavoriteMapperTest {
 
     @Test
     void toEntity_shouldSetUserAndBook_andIgnoreId() {
-        // Arrange
+    	
         User user = new User("user@example.com", "pwd");
         Book book = new Book("EXT-9", "Title");
-
-        // Act
         Favorite favorite = mapper.toEntity(user, book);
 
-        // Assert
         assertNull(favorite.getId());
         assertNotNull(favorite.getUser());
         assertNotNull(favorite.getBook());
@@ -39,15 +36,12 @@ class FavoriteMapperTest {
 
     @Test
     void toResponse_shouldMapNestedFields_andStatus() {
-        // Arrange
+    	
         User user = new User("user@example.com", "pwd");
         Book book = new Book("EXT-10", "Title");
         Favorite favorite = mapper.toEntity(user, book);
-
-        // Act
         FavoriteResponseDto dto = mapper.toResponse(favorite, FavoriteStatus.ADDED);
 
-        // Assert
         assertEquals("user@example.com", dto.getUserEmail());
         assertEquals("EXT-10", dto.getBookExternalId());
         assertEquals(FavoriteStatus.ADDED, dto.getStatus());
@@ -55,17 +49,15 @@ class FavoriteMapperTest {
 
     @Test
     void toResponses_defaultMethod_shouldReturnList_andPropagateStatus() {
-        // Arrange
+    	
         User user = new User("u@ex.com", "pwd");
         Book b1 = new Book("B-1", "T1");
         Book b2 = new Book("B-2", "T2");
         Favorite f1 = mapper.toEntity(user, b1);
         Favorite f2 = mapper.toEntity(user, b2);
 
-        // Act
         List<FavoriteResponseDto> dtos = mapper.toResponses(List.of(f1, f2), FavoriteStatus.REMOVED);
 
-        // Assert
         assertEquals(2, dtos.size());
         assertEquals("B-1", dtos.get(0).getBookExternalId());
         assertEquals("B-2", dtos.get(1).getBookExternalId());
@@ -75,12 +67,11 @@ class FavoriteMapperTest {
 
     @Test
     void convenienceMethods_shouldBuildExpectedStatuses() {
-        // Arrange
+    	
         User user = new User("u@ex.com", "pwd");
         Book book = new Book("B-3", "T3");
         Favorite fav = mapper.toEntity(user, book);
 
-        // Act & Assert
         FavoriteResponseDto added = mapper.toAddedResponse(fav);
         assertEquals(FavoriteStatus.ADDED, added.getStatus());
         assertEquals("u@ex.com", added.getUserEmail());
@@ -95,10 +86,9 @@ class FavoriteMapperTest {
 
     @Test
     void toNotFoundResponse_shouldReturnStatusNotFound_andEchoInputs() {
-        // Act
+    	
         FavoriteResponseDto dto = mapper.toNotFoundResponse("ghost@ex.com", "MISS-1");
 
-        // Assert
         assertEquals("ghost@ex.com", dto.getUserEmail());
         assertEquals("MISS-1", dto.getBookExternalId());
         assertEquals(FavoriteStatus.NOT_FOUND, dto.getStatus());
