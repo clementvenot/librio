@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Se connecter</title>
+</head>
+<body>
+<h1>Librio</h1>
+<h2>Connexion à mon compte</h2>
+<div th:if="${info}" style="color:blue" th:text="${info}"></div>
+<div th:if="${error}" style="color:red" th:text="${error}"></div>
+
+<form th:action="@{/login}" method="post">
+    <label>Email</label><br/>
+    <input type="email" name="email" required/><br/><br/>
+    <label>Mot de passe</label><br/>
+    <input type="password" name="password" required/><br/><br/>
+    <button type="submit">Se connecter</button>
+</form>
+<p>Pas encore de compte ? <a th:href="@{/register}">Créer un compte</a></p>
+</body>
+</html>
