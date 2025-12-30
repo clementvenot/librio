@@ -13,8 +13,8 @@ public class UserServiceFront {
     public UserServiceFront(RestClient restClient) {
         this.restClient = restClient;
     }
-
-    // verif email exist
+    
+    // reactions aux reponses du back 
     public UserExistResponseDto checkExists(String email) {
         UserExistRequestDto req = new UserExistRequestDto();
         req.setEmail(email);
@@ -24,10 +24,12 @@ public class UserServiceFront {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(req)
                 .retrieve()
+                .onStatus(status -> status.value() == 400, (reqSpec, res) -> { // si la reponse du back est 400                
+                	throw new IllegalArgumentException("Requête invalide: email incorrect ou manquant.");
+                })
                 .body(UserExistResponseDto.class);
     }
 
-    // création user
     public CreateUserResponseDto createUser(String email, String password) {
         CreateUserRequestDto req = new CreateUserRequestDto();
         req.setEmail(email);
@@ -44,7 +46,6 @@ public class UserServiceFront {
                 .body(CreateUserResponseDto.class);
     }
 
-    //connection user
     public LoginResponseDto login(String email, String password) {
         LoginRequestDto req = new LoginRequestDto();
         req.setEmail(email);
