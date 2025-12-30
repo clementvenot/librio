@@ -23,3 +23,5 @@ public class RestClientConfig {
                 .build();
     }
 }
+
+// return le restclient pour les services
