@@ -1,5 +1,6 @@
 package com.librio.backend.services;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -49,4 +50,17 @@ class BookServiceImpl implements IBookService {
     public boolean existsByExternalId(String externalId) {
         return bookRepository.existsByExternalId(externalId);
     }
+    
+    @Override    
+    public void deleteByExternalId(String externalId) {        
+    	if (!bookRepository.existsByExternalId(externalId)) {            
+    		throw new IllegalArgumentException("Aucun livre avec externalId: " + externalId);        
+    		}        bookRepository.deleteByExternalId(externalId);    
+    	}    
+    
+    @Override    
+    @Transactional(readOnly = true)    
+    public List<Book> findAll() {        
+    	return bookRepository.findAll();    
+    	}
 }

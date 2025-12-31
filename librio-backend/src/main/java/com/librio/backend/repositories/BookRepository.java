@@ -12,5 +12,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	
 	 Optional<Book> findByExternalId(String externalId);    
 	 boolean existsByExternalId(String externalId);
-
+	 void deleteByExternalId(String externalId);
 }
