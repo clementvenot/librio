@@ -6,7 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class CreateUserResponseDto {
 
     @Schema(description = "Identifiant utilisateur", 
-    		example = "101")
+    		example = "101",
+    		maxLength = 255)
     private Long id;
 
     @Schema(description = "Email créé", 

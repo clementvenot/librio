@@ -7,7 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class UserExistResponseDto {
 
     @Schema(description = "Email vérifié", 
-    		example = "user@example.com")
+    		example = "user@example.com",
+    		maxLength = 255)
     private String email;
 
     @Schema(description = "Indique si l'email existe déjà", 
