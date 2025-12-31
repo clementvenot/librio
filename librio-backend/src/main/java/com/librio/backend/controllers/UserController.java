@@ -38,7 +38,7 @@ public class UserController {
     }
 
     // ------------------------------------------
-    // POST /api/books  -  Création
+    // POST /api/users/exists  -  Email Exists ?
     // ------------------------------------------
     @Operation(
         summary = "Vérifier l'existence d'un utilisateur par email",
@@ -72,7 +72,9 @@ public class UserController {
         return ResponseEntity.ok(resp);
     }
 
-	
+    // ------------------------------------------
+    // POST /api/users  -  Création de user 
+    // ------------------------------------------
 	@Operation(
 	    summary = "Créer un utilisateur",
 	    description = "Crée un compte si l'email n'existe pas déjà. Retourne 201 Created avec Location."
@@ -123,6 +125,9 @@ public class UserController {
 	    return ResponseEntity.created(location).body(body);
 	}
 
+    // ------------------------------------------
+    // POST /api/auth/login  -  authentification user 
+    // ------------------------------------------
     @Operation(
         summary = "Connexion utilisateur",
         description = "Vérifie email et mot de passe et renvoie l'état d'authentification."
