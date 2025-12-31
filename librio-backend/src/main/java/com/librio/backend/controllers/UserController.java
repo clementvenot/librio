@@ -37,6 +37,9 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
+    // ------------------------------------------
+    // POST /api/books  -  Création
+    // ------------------------------------------
     @Operation(
         summary = "Vérifier l'existence d'un utilisateur par email",
         description = "Renvoie un booléen indiquant si l'email est déjà enregistré."
