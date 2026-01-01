@@ -62,8 +62,32 @@ public class UserServiceFront {
                 .body(LoginResponseDto.class);
     }
     
-    // exceptions personalisées :
+    
+     public UpdatePasswordResponseDto updatePassword(String email, String newPassword) {
+         UpdatePasswordRequestDto req = new UpdatePasswordRequestDto();
+         req.setEmail(email);
+         req.setNewPassword(newPassword);
 
+         return restClient.put()
+                 .uri("/users/password")
+                 .contentType(MediaType.APPLICATION_JSON)
+                 .body(req)
+                 .retrieve()
+                 .onStatus(status -> status.value() == 404, (spec, res) -> { // reponse 404 ot found
+                     throw new NotFoundException("Utilisateur introuvable.");
+                 })
+                 .onStatus(status -> status.value() == 400, (spec, res) -> { // request invalide 400
+                     throw new IllegalArgumentException("Requête invalide (validation).");
+                 })
+                 .body(UpdatePasswordResponseDto.class); // 200 reussis
+     }
+
+     // exceptions personalisées :
+     public static class NotFoundException extends RuntimeException {
+         private static final long serialVersionUID = 1L;
+         public NotFoundException(String msg) { super(msg); }
+     }
+ 
     public static class EmailAlreadyUsedException extends RuntimeException {
         private static final long serialVersionUID = 1L;
 		public EmailAlreadyUsedException(String msg) { super(msg); }

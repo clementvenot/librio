@@ -202,7 +202,7 @@ public class UserController {
     			responseCode = "404",            
     			description = "Utilisateur introuvable"),        
     	@ApiResponse(
-    			responseCode = "400", 
+    			responseCode = "400",
     			description = "Requête invalide (validation)")})    
     @PutMapping("/users/password") // peu être utiliser un PATCH plutôt
     public ResponseEntity<?> updatePassword(@Valid @RequestBody UpdatePasswordRequestDto dto) {        
@@ -214,6 +214,5 @@ public class UserController {
     					new UpdatePasswordResponseDto(dto.getEmail(), "Utilisateur introuvable"));        
     			}
     		}
-    	
 }
 

@@ -2,6 +2,7 @@ package com.librio.frontend.controllers;
 
 import com.librio.frontend.dto.CreateUserResponseDto;
 import com.librio.frontend.dto.LoginResponseDto;
+import com.librio.frontend.dto.UpdatePasswordResponseDto;
 import com.librio.frontend.services.UserServiceFront;
 import com.librio.frontend.services.UserServiceFront.EmailAlreadyUsedException;
 import com.librio.frontend.services.UserServiceFront.UnauthorizedException;
@@ -118,4 +119,50 @@ public class UserControllerFront {
 
         return "redirect:/login";
     }
-}
+    
+
+     @GetMapping("/password")
+     public String showPasswordForm(Model model,
+                                    @CookieValue(value = "userEmail", required = false) String userEmail) {
+         if (userEmail == null) {
+             return "redirect:/login";
+         }
+         model.addAttribute("email", userEmail);
+         model.addAttribute("success", null);
+         model.addAttribute("error", null);
+         return "password"; // Thymeleaf 
+     }
+
+     @PostMapping("/password")
+     public String submitPasswordChange(@RequestParam("email") String email,
+                                        @RequestParam("newPassword") String newPassword,
+                                        Model model) {
+         try {
+             UpdatePasswordResponseDto resp = client.updatePassword(email, newPassword);
+             model.addAttribute("success", resp.getMessage());
+             model.addAttribute("email", email);
+             return "password";
+         } catch (NotFoundException e) {
+             model.addAttribute("error", e.getMessage());
+             model.addAttribute("email", email);
+             return "password";
+         } catch (IllegalArgumentException e) {
+             model.addAttribute("error", "Le mot de passe doit contenir entre 5 et 128 caractères.");
+             model.addAttribute("email", email);
+             return "password";
+         } catch (Exception e) {
+             model.addAttribute("error", "Erreur lors de la mise à jour du mot de passe.");
+             model.addAttribute("email", email);
+             return "password";
+         }
+     }
+     
+     // exceptions personalisée :
+     public static class NotFoundException extends RuntimeException {
+         private static final long serialVersionUID = 1L;
+         public NotFoundException(String msg) { super(msg); }
+     }
+     
+ }
+
+
