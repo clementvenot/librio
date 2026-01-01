@@ -57,7 +57,7 @@ public class BigListBookResponseDto {
 
     @Size(max = 20)
     @Schema(
-        description = "Date de publication (format libre, ex: '2008-08-11' ou '2008').",
+        description = "Date de publication (format libre, ex: '2008-08-11').",
         example = "2008-08-11",
         maxLength = 20,
         nullable = true
@@ -66,8 +66,8 @@ public class BigListBookResponseDto {
 
     @Size(max = 500)
     @Schema(
-        description = "Catégories/genres (ex: séparées par des virgules).",
-        example = "Software Engineering, Programming",
+        description = "Catégories .",
+        example = "Software",
         maxLength = 500,
         nullable = true
     )
@@ -82,7 +82,7 @@ public class BigListBookResponseDto {
     private Integer pageCount;
 
     @Schema(
-        description = "Note moyenne (entier, ex: 0–5 ou 0–100 selon votre logique).",
+        description = "Note moyenne.",
         example = "5",
         nullable = true
     )

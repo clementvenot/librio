@@ -83,7 +83,7 @@ public class CreateBookRequestDto {
     private Integer pageCount;
 
     @Schema(
-        description = "Note moyenne (entier, ex: 0–5 ou 0–100 selon votre logique).",
+        description = "Note moyenne .",
         example = "5",
         nullable = true
     )
@@ -91,7 +91,7 @@ public class CreateBookRequestDto {
 
     @Size(max = 500)
     @Schema(
-        description = "URL de l’image (taille moyenne).",
+        description = "URL de l’image .",
         example = "https://example.com/images/clean-code-medium.jpg",
         maxLength = 500,
         nullable = true

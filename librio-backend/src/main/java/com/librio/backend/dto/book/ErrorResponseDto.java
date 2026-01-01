@@ -1,4 +1,3 @@
-
 package com.librio.backend.dto.book;
 
 import io.swagger.v3.oas.annotations.media.Schema;
