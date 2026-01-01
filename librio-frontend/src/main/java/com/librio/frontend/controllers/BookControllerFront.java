@@ -29,8 +29,16 @@ public class BookControllerFront {
 
     // affiche formulaire + liste 
     @GetMapping
-    public String page(Model model, @ModelAttribute("form") CreateBookForm form) {
-        if (!model.containsAttribute("form")) {
+    public String page(Model model, 
+    		@ModelAttribute("form") CreateBookForm form, 
+    		@CookieValue(value = "userEmail", required = false) String userEmail) {
+    	// ----------------------------------------------------------------------------------
+    	// Normalement avec spring boot pour une meilleure secu (je le ferai si j'ai le temps)
+    	if (userEmail == null) {
+    		return "redirect:/login"; } 
+    	// ----------------------------------------------------------------------------------
+    	
+    	if (!model.containsAttribute("form")) {
             model.addAttribute("form", new CreateBookForm());
         }
 
