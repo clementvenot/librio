@@ -37,5 +37,15 @@ class UserServiceImpl implements IUserService {
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+    
+
+	@Override
+	public void updatePasswordByEmail(String email, String newPassword) {
+	    int updated = userRepository.updatePasswordByEmail(email, newPassword);
+	    if (updated == 0) {
+	        throw new IllegalArgumentException("Utilisateur introuvable pour l'email: " + email);
+	    }
+}
+
 }
 

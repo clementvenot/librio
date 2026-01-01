@@ -4,6 +4,8 @@ import com.librio.backend.dto.user.CreateUserRequestDto;
 import com.librio.backend.dto.user.CreateUserResponseDto;
 import com.librio.backend.dto.user.LoginRequestDto;
 import com.librio.backend.dto.user.LoginResponseDto;
+import com.librio.backend.dto.user.UpdatePasswordRequestDto;
+import com.librio.backend.dto.user.UpdatePasswordResponseDto;
 import com.librio.backend.dto.user.UserExistRequestDto;
 import com.librio.backend.dto.user.UserExistResponseDto;
 import com.librio.backend.entities.User;
@@ -181,4 +183,37 @@ public class UserController {
 
         return ResponseEntity.ok(userMapper.toLoginResponse(true, "Connexion réussie")); // 200 LoginResponseDto
     }
+    
+    // PUT /api/users/password  -  Update password par email      
+    @Operation(        
+    		summary = "Mettre à jour le mot de passe (par email)",        
+    		description = "Modifie uniquement le champ 'password' de l'utilisateur identifié par email."    )    
+    @ApiResponses({        
+    	@ApiResponse(            
+    			responseCode = "200",    // 200 UpdatePasswordResponseDto        
+    			description = "Mot de passe mis à jour",            
+    			content = @Content(                
+    					mediaType = "application/json",                
+    					schema = @Schema(implementation = UpdatePasswordResponseDto.class),                
+    					examples = @ExampleObject(                    
+    							name = "Succès",                    
+    							value = "{\"email\":\"user@example.com\",\"message\":\"Mot de passe mis à jour\"}"))),        
+    	@ApiResponse(            
+    			responseCode = "404",            
+    			description = "Utilisateur introuvable"),        
+    	@ApiResponse(
+    			responseCode = "400", 
+    			description = "Requête invalide (validation)")})    
+    @PutMapping("/users/password") // peu être utiliser un PATCH plutôt
+    public ResponseEntity<?> updatePassword(@Valid @RequestBody UpdatePasswordRequestDto dto) {        
+    		try {            
+    			userService.updatePasswordByEmail(dto.getEmail(), dto.getNewPassword());            
+    			return ResponseEntity.ok(new UpdatePasswordResponseDto(dto.getEmail(), "Mot de passe mis à jour"));      
+    		} catch (IllegalArgumentException e) {            
+    			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(                
+    					new UpdatePasswordResponseDto(dto.getEmail(), "Utilisateur introuvable"));        
+    			}
+    		}
+    	
 }
+
