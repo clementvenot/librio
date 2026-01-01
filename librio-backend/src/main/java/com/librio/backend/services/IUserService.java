@@ -8,5 +8,7 @@ public interface IUserService {
 	User register(String email, String password);    
 	Optional<User> findByEmail(String email);    
 	boolean existsByEmail(String email);
+	
+    void updatePasswordByEmail(String email, String newPassword);
 
 }
