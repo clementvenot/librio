@@ -1,16 +1,31 @@
 package com.librio.backend.dto.favorite;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+@Schema(name = "AddFavoriteRequest", description = "Requête pour ajouter un livre aux favoris d'un utilisateur.")
 public class AddFavoriteRequestDto {
 
+    @Schema(
+        description = "Email de l'utilisateur",
+        example = "utilisateur@example.com",
+        maxLength = 255,
+        format = "email",
+        requiredMode = Schema.RequiredMode.REQUIRED
+    )
     @Email(message = "Email invalide")
     @NotBlank(message = "Email obligatoire")
     @Size(max = 255)
     private String userEmail;
 
+    @Schema(
+        description = "Identifiant externe du livre (provenant d'une source tierce)",
+        example = "OL123M",
+        maxLength = 100,
+        requiredMode = Schema.RequiredMode.REQUIRED
+    )
     @NotBlank(message = "ExternalId obligatoire")
     @Size(max = 100)
     private String bookExternalId;
@@ -22,9 +37,17 @@ public class AddFavoriteRequestDto {
         this.bookExternalId = bookExternalId;
     }
 
-    public String getUserEmail() { return userEmail; }
-    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
+    public String getUserEmail() { 
+    	return userEmail; 
+    	}
+    public void setUserEmail(String userEmail) { 
+    	this.userEmail = userEmail; 
+    	}
 
-    public String getBookExternalId() { return bookExternalId; }
-    public void setBookExternalId(String bookExternalId) { this.bookExternalId = bookExternalId; }
+    public String getBookExternalId() { 
+    	return bookExternalId; 
+    	}
+    public void setBookExternalId(String bookExternalId) { 
+    	this.bookExternalId = bookExternalId; 
+    	}
 }
