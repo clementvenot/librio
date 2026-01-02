@@ -56,7 +56,12 @@ class BookServiceImpl implements IBookService {
     	if (!bookRepository.existsByExternalId(externalId)) {            
     		throw new IllegalArgumentException("Aucun livre avec externalId: " + externalId);        
     		}        bookRepository.deleteByExternalId(externalId);    
-    	}    
+    	}  
+    
+    @Override
+    public List<Book> search(String title, String author, String publisher, String categories, Long minRating) {        
+    	return bookRepository.searchBooks(title, author, publisher, categories, minRating);    
+    	}
     
     @Override    
     @Transactional(readOnly = true)    

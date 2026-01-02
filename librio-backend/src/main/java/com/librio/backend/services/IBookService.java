@@ -13,4 +13,5 @@ public interface IBookService {
 	boolean existsByExternalId(String externalId);
     void deleteByExternalId(String externalId); 
     List<Book> findAll();
+    List<Book> search(String title, String author, String publisher, String categories, Long minRating);
 }

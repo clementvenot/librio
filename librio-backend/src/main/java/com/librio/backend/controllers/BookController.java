@@ -12,13 +12,11 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.Parameter;
-
 import java.util.List;
 
 @RestController
@@ -308,4 +306,27 @@ public class BookController {
         bookService.deleteByExternalId(externalId);
         return ResponseEntity.noContent().build();
     }
+    
+	@Operation(
+	    summary = "Rechercher des livres",
+	    description = "Recherche par title, author, publisher, categories avec Like, "
+	                + "avec filtre sur la note minimale averageRating >= minRating."
+	)
+	@GetMapping("/search")
+	public ResponseEntity<List<BigListBookResponseDto>> search(
+	        @Parameter(description = "Filtre sur le titre (LIKE, case-insensitive)", example = "Clean")
+	        @RequestParam(value = "title", required = false) String title,
+	        @Parameter(description = "Filtre sur l'auteur (LIKE, case-insensitive)", example = "Martin")
+	        @RequestParam(value = "author", required = false) String author,
+	        @Parameter(description = "Filtre sur l'éditeur (LIKE, case-insensitive)", example = "Prentice")
+	        @RequestParam(value = "publisher", required = false) String publisher,
+	        @Parameter(description = "Filtre sur les catégories (LIKE, case-insensitive)", example = "Software")
+	        @RequestParam(value = "categories", required = false) String categories,
+	        @Parameter(description = "Note minimale (>=). Les livres sans note sont ignorés si ce paramètre est fourni.", example = "4")
+	        @RequestParam(value = "minRating", required = false) Long minRating
+	) {
+	    List<Book> results = bookService.search(title, author, publisher, categories, minRating);
+	    return ResponseEntity.ok(bookMapper.toBigListDtos(results));
+	}
+
 }
