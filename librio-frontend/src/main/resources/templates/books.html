@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Gestion des livres</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+<body>
+
+<h1>Livres</h1>
+
+<!-- Messages flash -->
+<div th:if="${success}" th:text="${success}"></div>
+<div th:if="${error}" th:text="${error}"></div>
+
+<!-- Formulaire de création (tous attributs) -->
+<section>
+    <h2>Créer un livre</h2>
+    <form th:action="@{/ui/books}" method="post" th:object="${form}">
+
+        <div>
+            <!-- externalId -->
+            <div>
+                <div>
+                    <label for="externalId">External ID * (volumeId Google)</label>
+                    <input id="externalId" type="text" th:field="*{externalId}" placeholder="ex: gbooks:abc123"/>
+                    <div th:if="${#fields.hasErrors('externalId')}" th:errors="*{externalId}"></div>
+                </div>
+            </div>
+
+            <!-- title -->
+            <div>
+                <div>
+                    <label for="title">Titre *</label>
+                    <input id="title" type="text" th:field="*{title}" placeholder="ex: Clean Architecture"/>
+                    <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                </div>
+            </div>
+
+            <!-- subtitle -->
+            <div>
+                <div>
+                    <label for="subtitle">Sous-titre</label>
+                    <input id="subtitle" type="text" th:field="*{subtitle}" placeholder="ex: A Craftsman's Guide"/>
+                    <div th:if="${#fields.hasErrors('subtitle')}" th:errors="*{subtitle}"></div>
+                </div>
+            </div>
+
+            <!-- author -->
+            <div>
+                <div>
+                    <label for="author">Auteur</label>
+                    <input id="author" type="text" th:field="*{author}" placeholder="ex: Robert C. Martin"/>
+                    <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+                </div>
+            </div>
+
+            <!-- publisher -->
+            <div>
+                <div>
+                    <label for="publisher">Éditeur</label>
+                    <input id="publisher" type="text" th:field="*{publisher}" placeholder="ex: Prentice Hall"/>
+                    <div th:if="${#fields.hasErrors('publisher')}" th:errors="*{publisher}"></div>
+                </div>
+            </div>
+
+            <!-- publishedDate -->
+            <div>
+                <div>
+                    <label for="publishedDate">Date de publication (YYYY-MM-DD)</label>
+                    <input id="publishedDate" type="date" th:field="*{publishedDate}" placeholder="YYYY-MM-DD"/>
+                    <div th:if="${#fields.hasErrors('publishedDate')}" th:errors="*{publishedDate}"></div>
+                </div>
+            </div>
+
+            <!-- categories -->
+            <div>
+                <div>
+                    <label for="categories">Catégories</label>
+                    <input id="categories" type="text" th:field="*{categories}" placeholder="ex: Software Engineering"/>
+                    <div th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}"></div>
+                </div>
+            </div>
+
+            <!-- pageCount -->
+            <div>
+                <div>
+                    <label for="pageCount">Nombre de pages</label>
+                    <input id="pageCount" type="number" min="1" step="1" th:field="*{pageCount}" placeholder="ex: 432"/>
+                    <div th:if="${#fields.hasErrors('pageCount')}" th:errors="*{pageCount}"></div>
+                </div>
+            </div>
+
+            <!-- averageRating -->
+            <div>
+                <div>
+                    <label for="averageRating">Note moyenne (0 à 5)</label>
+                    <input id="averageRating" type="number" min="0" max="5" step="1" th:field="*{averageRating}" placeholder="ex: 5"/>
+                    <div th:if="${#fields.hasErrors('averageRating')}" th:errors="*{averageRating}"></div>
+                </div>
+            </div>
+
+            <!-- imageMedium -->
+            <div>
+                <div>
+                    <label for="imageMedium">Image (URL)</label>
+                    <input id="imageMedium" type="url" th:field="*{imageMedium}" placeholder="ex: https://example.com/cover.jpg"/>
+                    <div th:if="${#fields.hasErrors('imageMedium')}" th:errors="*{imageMedium}"></div>
+                    <div>Optionnel. Un aperçu s’affiche si l’URL est valide.</div>
+                </div>
+            </div>
+
+            <!-- Aperçu de la couverture si URL fournie -->
+            <div th:if="${form.imageMedium}">
+                <label>Aperçu</label><br/>
+                <img th:src="${form.imageMedium}" alt="Couverture" onerror="this.style.display='none'"/>
+            </div>
+        </div>
+
+        <div style="margin-top: 1rem;">
+            <button type="submit">Créer</button>
+        </div>
+    </form>
+</section>
+
+<!-- Liste des livres -->
+<section>
+    <h2>Liste des livres</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Auteur</th>
+            <th>Éditeur</th>
+            <th>Catégories</th>
+            <th>External ID</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${books == null || #lists.isEmpty(books)}">
+            <td colspan="6">Aucun livre pour le moment.</td>
+        </tr>
+        <tr th:each="b : ${books}">
+            <td th:text="${b.title}">Titre</td>
+            <td th:text="${b.author}">Auteur</td>
+            <td th:text="${b.publisher}">Éditeur</td>
+            <td th:text="${b.categories}">Catégories</td>
+            <td th:text="${b.externalId}">externalId</td>
+            <td>
+                <div>
+                    <form th:action="@{|/ui/books/${b.externalId}/delete|}" method="post"
+                          onsubmit="return confirm('Supprimer ce livre ?');">
+                        <button type="submit">Supprimer</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+</body>
+</html>
