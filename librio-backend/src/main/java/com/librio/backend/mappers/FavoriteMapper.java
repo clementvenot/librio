@@ -1,5 +1,6 @@
 package com.librio.backend.mappers;
 
+import com.librio.backend.dto.favorite.FavoriteListItemDto;
 import com.librio.backend.dto.favorite.FavoriteResponseDto;
 import com.librio.backend.dto.favorite.FavoriteStatus;
 import com.librio.backend.entities.Book;
@@ -38,7 +39,15 @@ public interface FavoriteMapper {
         }
         return out;
     }
-
+    
+    default FavoriteListItemDto toListItem(Favorite favorite) {        
+    	return new FavoriteListItemDto(            
+    			favorite != null && favorite.getUser() != null ? favorite.getUser().getEmail() : null,            
+    			favorite != null && favorite.getBook() != null ? favorite.getBook().getExternalId() : null        
+    					);    
+    	}
+    
+    
     // Réponses pratiques
     default FavoriteResponseDto toAddedResponse(Favorite favorite) {
         return toResponse(favorite, FavoriteStatus.ADDED);

@@ -1,5 +1,6 @@
 package com.librio.backend.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -66,6 +67,11 @@ class FavoriteServiceImpl implements IFavoriteService {
     @Transactional(readOnly = true)
     public boolean exists(Long userId, Long bookId) {
         return favoriteRepository.existsByUserIdAndBookId(userId, bookId);
+    }
+    
+    @Override    
+    public List<Favorite> findAllByUser_Email(String userEmail) {        
+    	return favoriteRepository.findAllByUser_Email(userEmail);    
     }
 }
 
