@@ -82,7 +82,7 @@ public class UserControllerFront {
                 cookie.setMaxAge(60 * 60);  // 1 heure (en secondes)
                 response.addCookie(cookie);
 
-                return "redirect:/home";
+                return "redirect:/account";
             } else {
                 model.addAttribute("error", resp.getMessage()); //on Status 400
                 return "login";
