@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.librio.backend.entities.Book;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom  {
 	
 	 Optional<Book> findByExternalId(String externalId);    
 	 boolean existsByExternalId(String externalId);
