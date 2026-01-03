@@ -12,7 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.ResponseSpec;
+import org.springframework.web.client.RestClientResponseException;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -49,7 +52,7 @@ public class BookServiceFront {
                     ErrorResponseDto error = null;
                     try { // tente de lire ErrorResponseDto
                         error = ((ResponseSpec) res).body(ErrorResponseDto.class);
-                    } catch (Exception ignore) {} // on ignore si la lecture echoue et on met un message générique  sinon on l'affiche 
+                    } catch (Exception ignore) {} // on ignore
                     String msg = (error != null && error.getMessage() != null) ? error.getMessage() : "Aucun livre avec externalId: " + externalId;
                     throw new NotFoundException(msg);
                 })
@@ -65,7 +68,7 @@ public class BookServiceFront {
                     ErrorResponseDto error = null;
                     try { // tente de lire ErrorResponseDto
                         error = ((ResponseSpec) res).body(ErrorResponseDto.class);
-                    } catch (Exception ignore) {} // on ignore si la lecture echoue et on met un message générique sinon on l'affiche 
+                    } catch (Exception ignore) {} // on ignore
                     String msg = (error != null && error.getMessage() != null) ? error.getMessage() : "Aucun livre avec externalId: " + externalId;
                     throw new NotFoundException(msg);
                 })
@@ -79,17 +82,17 @@ public class BookServiceFront {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(req)
                 .retrieve()
-                .onStatus(status -> status.value() == 409, (reqSpec, res) -> {  // si la reponse est 409 ExistsBookResponseDto
-                    try { // on lit ExistsBookResponseDto pour recuperer l'extId  et on affiche le message
+                .onStatus(status -> status.value() == 409, (reqSpec, res) -> {  // 409 ExistsBookResponseDto
+                    try { // on lit ExistsBookResponseDto 
                         ExistsBookResponseDto exists = ((ResponseSpec) res).body(ExistsBookResponseDto.class);
                         String extId = (exists != null) ? exists.getExternalId() : null;
                         String msg = (extId != null) ? "Cet externalId est déjà utilisé: " + extId : "Cet externalId est déjà utilisé.";
                         throw new DuplicateExternalIdException(msg);
                     } catch (Exception parseConflict) { //on arrive pas à lire ExistsBookResponseDto 
                         ErrorResponseDto err = null;
-                        try { //on lis alors avec ErrorResponseDto
+                        try { //on lis ErrorResponseDto
                             err = ((ResponseSpec) res).body(ErrorResponseDto.class);
-                        } catch (Exception ignore) {} //sinon massage par default
+                        } catch (Exception ignore) {} //sinon message par default
                         String msg = (err != null && err.getMessage() != null) ? err.getMessage() : "Cet externalId est déjà utilisé.";
                         throw new DuplicateExternalIdException(msg);
                     }
@@ -121,6 +124,51 @@ public class BookServiceFront {
                 .toBodilessEntity();
         if (response.getStatusCode().value() != 204) { // reponse = 204
             throw new IllegalStateException("Suppression: code inattendu " + response.getStatusCode().value());
+        }
+    }
+    
+    
+ 
+    // GET /books/search?title=&author=&publisher=&categories=&minRating=
+    public List<BigListBookResponseDto> search(
+            String title,
+            String author,
+            String publisher,
+            String categories,
+            Long minRating
+    ) {
+        try {
+            BigListBookResponseDto[] arr = restClient
+                    .get()
+                    .uri(uriBuilder -> {
+                        var b = uriBuilder.path("/books/search");
+                        if (title != null && !title.isBlank()) {
+                            b.queryParam("title", title);
+                        }
+                        if (author != null && !author.isBlank()) {
+                            b.queryParam("author", author);
+                        }
+                        if (publisher != null && !publisher.isBlank()) {
+                            b.queryParam("publisher", publisher);
+                        }
+                        if (categories != null && !categories.isBlank()) {
+                            b.queryParam("categories", categories);
+                        }
+                        if (minRating != null) {
+                            b.queryParam("minRating", minRating);
+                        }
+                        return b.build();
+                    })
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .toEntity(BigListBookResponseDto[].class)
+                    .getBody();
+
+            return (arr == null) ? Collections.emptyList() : Arrays.asList(arr);
+
+        } catch (RestClientResponseException ex) {
+            // En cas d'erreur on renvoie une liste vide 
+            return Collections.emptyList();
         }
     }
 

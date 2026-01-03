@@ -1,6 +1,9 @@
 package com.librio.frontend.controllers;
 
 import com.librio.frontend.dto.favorite.FavoriteListItemDto;
+import com.librio.frontend.dto.favorite.FavoriteResponseDto;
+import com.librio.frontend.dto.favorite.FavoriteStatus;
+import com.librio.frontend.dto.favorite.RemoveFavoriteRequestDto;
 import com.librio.frontend.dto.book.LittleListBookResponseDto;
 import com.librio.frontend.services.FavoriteServiceFront;
 import com.librio.frontend.services.UserServiceFront;
@@ -131,6 +134,40 @@ public class AccountController {
             ra.addAttribute("error", "Erreur lors de la mise à jour du mot de passe.");
             return "redirect:/account";
         }
+    }
+    
+    // suppression fav 
+    @PostMapping("/{externalId}/unfavorite")
+    public String removeFavorite(@PathVariable("externalId") String externalId,
+                                 @CookieValue(value = "userEmail", required = false) String userEmail,
+                                 RedirectAttributes ra) {
+
+        if (!StringUtils.hasText(userEmail)) {
+            return "redirect:/login";
+        }
+
+        try {
+            RemoveFavoriteRequestDto req = new RemoveFavoriteRequestDto();
+            req.setUserEmail(userEmail);
+            req.setBookExternalId(externalId);
+
+            FavoriteResponseDto resp = favoriteServiceFront.removeFavorite(req);
+            if (resp != null && resp.getStatus() != null) {
+                if (resp.getStatus() == FavoriteStatus.REMOVED) {
+                    ra.addFlashAttribute("success", "Retiré des favoris.");
+                } else if (resp.getStatus() == FavoriteStatus.NOT_FOUND) {
+                    ra.addFlashAttribute("error", "Favori, utilisateur ou livre introuvable.");
+                } else {
+                    ra.addFlashAttribute("error", "Réponse inattendue du serveur.");
+                }
+            } else {
+                ra.addFlashAttribute("error", "Réponse inattendue du serveur.");
+            }
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Impossible de retirer des favoris.");
+        }
+
+        return "redirect:/account";
     }
 
     //deconnexion (suppression cookie puis redirection)
