@@ -319,8 +319,10 @@ public class BookControllerFront {
         private String author;
         private String publisher;
 
-        @Pattern(regexp = "^$|^\\d{4}-\\d{2}-\\d{2}$", message = "Format attendu: YYYY-MM-DD.")
-        private String publishedDate;
+
+        @Pattern(regexp = "^$|^\\d{2}/\\d{2}/\\d{4}$", message = "Format attendu: DD-MM-YYYY.")
+		private String publishedDate;
+
 
         private String categories;
         private Integer pageCount;
