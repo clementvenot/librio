@@ -39,13 +39,7 @@ public class BookControllerFront {
         this.favoriteServiceFront = favoriteServiceFront;
     }
 
-    /**
-     * Page unique :
-     * - Sans paramètres de recherche => liste condensée
-     * - Avec paramètres => résultats de recherche
-     * On ajoute aussi la liste des favoris pour l’utilisateur courant afin de
-     * rendre le bouton “Déjà en favoris” cliquable (unfavorite).
-     */
+
     @GetMapping
     public String page(
             Model model,
@@ -58,7 +52,7 @@ public class BookControllerFront {
             @RequestParam(value = "categories", required = false) String categories,
             @RequestParam(value = "minRating", required = false) Long minRating
     ) {
-        // Accès protégé simple par cookie
+        // acces cookie
         if (userEmail == null) {
             return "redirect:/login";
         }
@@ -172,16 +166,12 @@ public class BookControllerFront {
         }
     }
 
-    /**
-     * AJOUTER aux favoris depuis la page /ui/books (liste ou résultats)
-     * - Utilise le cookie userEmail
-     * - Préserve les filtres de recherche au retour
-     */
+    //add fav
     @PostMapping("/{externalId}/favorite")
     public String addFavorite(@PathVariable("externalId") String externalId,
                               @CookieValue(value = "userEmail", required = false) String userEmail,
                               RedirectAttributes ra,
-                              // préserver les filtres lors du redirect :
+                              // préserver les filtres redirect
                               @RequestParam(value = "title", required = false) String title,
                               @RequestParam(value = "author", required = false) String author,
                               @RequestParam(value = "publisher", required = false) String publisher,

@@ -4,8 +4,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.librio.backend.entities.User;
 import com.librio.backend.repositories.UserRepository;
-import org.springframework.transaction.annotation.Transactional; 
-//pour obtenir le read only (permet d'économiser coût cpu memoire)
+import org.springframework.transaction.annotation.Transactional; //pour obtenir le read only (permet d'économiser coût cpu memoire)
+
 
 @Service
 @Transactional

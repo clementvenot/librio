@@ -86,7 +86,6 @@ public class BookController {
         })
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody CreateBookRequestDto req) {
-        // Utiliser existsByExternalId pour piloter la réponse 409 avec ExistsBookResponseDto
         if (bookService.existsByExternalId(req.getExternalId())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ExistsBookResponseDto(req.getExternalId(), true));

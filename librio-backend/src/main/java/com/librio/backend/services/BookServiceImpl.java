@@ -3,12 +3,10 @@ package com.librio.backend.services;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-
 import com.librio.backend.dto.book.CreateBookRequestDto;
 import com.librio.backend.entities.Book;
 import com.librio.backend.repositories.BookRepository;
-import org.springframework.transaction.annotation.Transactional; 
-//pour obtenir le read only (permet d'économiser coût cpu memoire)
+import org.springframework.transaction.annotation.Transactional; //pour obtenir le read only (permet d'économiser coût cpu memoire)
 
 @Service
 @Transactional 
