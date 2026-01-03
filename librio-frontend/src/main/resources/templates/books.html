@@ -2,162 +2,135 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta charset="UTF-8"/>
-    <title>Gestion des livres</title>
+    <title>Livres</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { margin-bottom: 10px; }
+        .book {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .actions { display: flex; gap: 8px; }
+        form label { display: block; margin-bottom: 8px; } 
+        input, button { margin-top: 4px; }
+    </style>
 </head>
 <body>
 
-<h1>Livres</h1>
+<header>
+    <h1>Livres</h1>
+    <span th:if="${userEmail != null}" th:text="${userEmail}"></span>
+    <a th:href="@{/account}">Mon compte</a> |
+    <a th:href="@{/logout}">Se déconnecter</a>
+</header>
 
 <!-- Messages flash -->
 <div th:if="${success}" th:text="${success}"></div>
+<div th:if="${info}" th:text="${info}"></div>
 <div th:if="${error}" th:text="${error}"></div>
 
-<!-- Formulaire de création (tous attributs) -->
+<hr/>
+
+<!-- Formulaire de création -->
 <section>
     <h2>Créer un livre</h2>
     <form th:action="@{/ui/books}" method="post" th:object="${form}">
-
-        <div>
-            <!-- externalId -->
-            <div>
-                <div>
-                    <label for="externalId">External ID * (volumeId Google)</label>
-                    <input id="externalId" type="text" th:field="*{externalId}" placeholder="ex: gbooks:abc123"/>
-                    <div th:if="${#fields.hasErrors('externalId')}" th:errors="*{externalId}"></div>
-                </div>
-            </div>
-
-            <!-- title -->
-            <div>
-                <div>
-                    <label for="title">Titre *</label>
-                    <input id="title" type="text" th:field="*{title}" placeholder="ex: Clean Architecture"/>
-                    <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
-                </div>
-            </div>
-
-            <!-- subtitle -->
-            <div>
-                <div>
-                    <label for="subtitle">Sous-titre</label>
-                    <input id="subtitle" type="text" th:field="*{subtitle}" placeholder="ex: A Craftsman's Guide"/>
-                    <div th:if="${#fields.hasErrors('subtitle')}" th:errors="*{subtitle}"></div>
-                </div>
-            </div>
-
-            <!-- author -->
-            <div>
-                <div>
-                    <label for="author">Auteur</label>
-                    <input id="author" type="text" th:field="*{author}" placeholder="ex: Robert C. Martin"/>
-                    <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
-                </div>
-            </div>
-
-            <!-- publisher -->
-            <div>
-                <div>
-                    <label for="publisher">Éditeur</label>
-                    <input id="publisher" type="text" th:field="*{publisher}" placeholder="ex: Prentice Hall"/>
-                    <div th:if="${#fields.hasErrors('publisher')}" th:errors="*{publisher}"></div>
-                </div>
-            </div>
-
-            <!-- publishedDate -->
-            <div>
-                <div>
-                    <label for="publishedDate">Date de publication (YYYY-MM-DD)</label>
-                    <input id="publishedDate" type="date" th:field="*{publishedDate}" placeholder="YYYY-MM-DD"/>
-                    <div th:if="${#fields.hasErrors('publishedDate')}" th:errors="*{publishedDate}"></div>
-                </div>
-            </div>
-
-            <!-- categories -->
-            <div>
-                <div>
-                    <label for="categories">Catégories</label>
-                    <input id="categories" type="text" th:field="*{categories}" placeholder="ex: Software Engineering"/>
-                    <div th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}"></div>
-                </div>
-            </div>
-
-            <!-- pageCount -->
-            <div>
-                <div>
-                    <label for="pageCount">Nombre de pages</label>
-                    <input id="pageCount" type="number" min="1" step="1" th:field="*{pageCount}" placeholder="ex: 432"/>
-                    <div th:if="${#fields.hasErrors('pageCount')}" th:errors="*{pageCount}"></div>
-                </div>
-            </div>
-
-            <!-- averageRating -->
-            <div>
-                <div>
-                    <label for="averageRating">Note moyenne (0 à 5)</label>
-                    <input id="averageRating" type="number" min="0" max="5" step="1" th:field="*{averageRating}" placeholder="ex: 5"/>
-                    <div th:if="${#fields.hasErrors('averageRating')}" th:errors="*{averageRating}"></div>
-                </div>
-            </div>
-
-            <!-- imageMedium -->
-            <div>
-                <div>
-                    <label for="imageMedium">Image (URL)</label>
-                    <input id="imageMedium" type="url" th:field="*{imageMedium}" placeholder="ex: https://example.com/cover.jpg"/>
-                    <div th:if="${#fields.hasErrors('imageMedium')}" th:errors="*{imageMedium}"></div>
-                    <div>Optionnel. Un aperçu s’affiche si l’URL est valide.</div>
-                </div>
-            </div>
-
-            <!-- Aperçu de la couverture si URL fournie -->
-            <div th:if="${form.imageMedium}">
-                <label>Aperçu</label><br/>
-                <img th:src="${form.imageMedium}" alt="Couverture" onerror="this.style.display='none'"/>
-            </div>
-        </div>
-
-        <div style="margin-top: 1rem;">
-            <button type="submit">Créer</button>
-        </div>
+        <label>ExternalId <input type="text" th:field="*{externalId}"></label>
+        <label>Titre <input type="text" th:field="*{title}"></label>
+        <label>Sous-titre <input type="text" th:field="*{subtitle}"></label>
+        <label>Auteur <input type="text" th:field="*{author}"></label>
+        <label>Éditeur <input type="text" th:field="*{publisher}"></label>
+        <label>Date de publication <input type="text" th:field="*{publishedDate}"></label>
+        <label>Catégories <input type="text" th:field="*{categories}"></label>
+        <label>Pages <input type="number" th:field="*{pageCount}"></label>
+        <label>Note moyenne <input type="number" th:field="*{averageRating}"></label>
+        <label>Image (URL) <input type="url" th:field="*{imageMedium}"></label>
+        <button type="submit">Créer</button>
     </form>
 </section>
 
-<!-- Liste des livres -->
+<hr/>
+
+<!-- Formulaire de recherche -->
 <section>
-    <h2>Liste des livres</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Titre</th>
-            <th>Auteur</th>
-            <th>Éditeur</th>
-            <th>Catégories</th>
-            <th>External ID</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:if="${books == null || #lists.isEmpty(books)}">
-            <td colspan="6">Aucun livre pour le moment.</td>
-        </tr>
-        <tr th:each="b : ${books}">
-            <td th:text="${b.title}">Titre</td>
-            <td th:text="${b.author}">Auteur</td>
-            <td th:text="${b.publisher}">Éditeur</td>
-            <td th:text="${b.categories}">Catégories</td>
-            <td th:text="${b.externalId}">externalId</td>
-            <td>
-                <div>
-                    <form th:action="@{|/ui/books/${b.externalId}/delete|}" method="post"
-                          onsubmit="return confirm('Supprimer ce livre ?');">
-                        <button type="submit">Supprimer</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <h2>Recherche</h2>
+    <form th:action="@{/ui/books}" method="get">
+        <label>Titre <input type="text" name="title" th:value="${searchParams?.title}"></label>
+        <label>Auteur <input type="text" name="author" th:value="${searchParams?.author}"></label>
+        <label>Éditeur <input type="text" name="publisher" th:value="${searchParams?.publisher}"></label>
+        <label>Catégories <input type="text" name="categories" th:value="${searchParams?.categories}"></label>
+        <label>Note minimale <input type="number" name="minRating" th:value="${searchParams?.minRating}"></label>
+        <button type="submit">Rechercher</button>
+        <a th:href="@{/ui/books}">Réinitialiser</a>
+    </form>
+</section>
+
+<hr/>
+
+<!-- Résultats -->
+<section th:if="${results != null}">
+    <h2 th:text="'Résultats (' + ${#lists.size(results)} + ')'">Résultats</h2>
+    <div th:if="${#lists.isEmpty(results)}">Aucun résultat.</div>
+    <div th:if="${!#lists.isEmpty(results)}">
+        <article th:each="b : ${results}" class="book">
+            <div>
+                <strong th:text="${b.title}"></strong> |
+                Auteur: <span th:text="${b.author}"></span> |
+                Éditeur: <span th:text="${b.publisher}"></span> |
+                Catégories: <span th:text="${b.categories}"></span> |
+                Note: <span th:text="${b.averageRating}"></span>
+                <a th:href="@{|/ui/books/${b.externalId}|}">Détails</a>
+            </div>
+            <div class="actions">
+                <form th:action="@{|/ui/books/${b.externalId}/delete|}" method="post">
+                    <button type="submit">Supprimer</button>
+                </form>
+                <form th:if="${favoriteIds == null or !favoriteIds.contains(b.externalId)}"
+                      th:action="@{|/ui/books/${b.externalId}/favorite|}" method="post">
+                    <button type="submit">Favori</button>
+                </form>
+                <form th:if="${favoriteIds != null and favoriteIds.contains(b.externalId)}"
+                      th:action="@{|/ui/books/${b.externalId}/unfavorite|}" method="post">
+                    <button type="submit">Retirer</button>
+                </form>
+            </div>
+        </article>
+    </div>
+</section>
+
+<!-- Liste complète -->
+<section th:if="${books != null}">
+    <h2 th:text="'Tous les livres (' + ${#lists.size(books)} + ')'">Tous les livres</h2>
+    <div th:if="${#lists.isEmpty(books)}">Aucun livre.</div>
+    <div th:if="${!#lists.isEmpty(books)}">
+        <article th:each="b : ${books}" class="book">
+            <div>
+                <strong th:text="${b.title}"></strong> |
+                Auteur: <span th:text="${b.author}"></span> |
+                Éditeur: <span th:text="${b.publisher}"></span> |
+                Catégories: <span th:text="${b.categories}"></span>
+                <a th:href="@{|/ui/books/${b.externalId}|}">Détails</a>
+            </div>
+            <div class="actions">
+                <form th:action="@{|/ui/books/${b.externalId}/delete|}" method="post">
+                    <button type="submit">Supprimer</button>
+                </form>
+                <form th:if="${favoriteIds == null or !favoriteIds.contains(b.externalId)}"
+                      th:action="@{|/ui/books/${b.externalId}/favorite|}" method="post">
+                    <button type="submit">Favori</button>
+                </form>
+                <form th:if="${favoriteIds != null and favoriteIds.contains(b.externalId)}"
+                      th:action="@{|/ui/books/${b.externalId}/unfavorite|}" method="post">
+                    <button type="submit">Retirer</button>
+                </form>
+            </div>
+        </article>
+    </div>
 </section>
 
 </body>

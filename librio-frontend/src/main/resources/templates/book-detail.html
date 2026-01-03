@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${book != null ? book.title : 'Détail du livre'}">Détail du livre</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { max-width: 800px; margin: auto; }
+    img { max-width: 200px; height: auto; border: 1px solid #ccc; }
+    .row { margin: 8px 0; }
+    .label { font-weight: bold; }
+    .tags span { display: inline-block; background: #eee; padding: 4px 8px; margin: 2px; border-radius: 4px; }
+    .error { color: red; margin-top: 10px; }
+    a.button { display: inline-block; padding: 6px 10px; background: #007bff; color: #fff; text-decoration: none; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <p><a th:href="@{/account}" class="button">Compte</a></p>
+  <p><a th:href="@{/ui/books}" class="button">Les livres</a></p>
+
+  <h1 th:text="${book.title}">Titre du livre</h1>
+  <p th:if="${book.subtitle}" th:text="${book.subtitle}"></p>
+  <p>
+    <span th:if="${book.author}" th:text="${book.author}"></span>
+    <span th:if="${book.publisher}"> · <span th:text="${book.publisher}"></span></span>
+    <span th:if="${book.publishedDate}"> · <span th:text="${book.publishedDate}"></span></span>
+  </p>
+
+  <div>
+    <img th:if="${book.imageMedium}" th:src="${book.imageMedium}" alt="Couverture"/>
+    <div th:if="${book.imageMedium == null}">Aucune image disponible</div>
+  </div>
+
+  <div class="row"><span class="label">ID externe :</span> <code th:text="${book.externalId}"></code></div>
+  <div class="row"><span class="label">Titre :</span> <span th:text="${book.title}"></span></div>
+  <div class="row" th:if="${book.subtitle}"><span class="label">Sous-titre :</span> <span th:text="${book.subtitle}"></span></div>
+  <div class="row" th:if="${book.author}"><span class="label">Auteur :</span> <span th:text="${book.author}"></span></div>
+  <div class="row" th:if="${book.publisher}"><span class="label">Éditeur :</span> <span th:text="${book.publisher}"></span></div>
+  <div class="row" th:if="${book.publishedDate}"><span class="label">Date :</span> <span th:text="${book.publishedDate}"></span></div>
+  <div class="row" th:if="${book.categories}">
+    <span class="label">Catégories :</span>
+    <div class="tags">
+      <span th:each="cat : ${#strings.arraySplit(book.categories, ',')}" th:text="${#strings.trim(cat)}"></span>
+    </div>
+  </div>
+  <div class="row" th:if="${book.pageCount != null}"><span class="label">Pages :</span> <span th:text="${book.pageCount}"></span></div>
+  <div class="row" th:if="${book.averageRating != null}"><span class="label">Note :</span> <span th:text="${book.averageRating}"></span></div>
+
+  <div th:if="${error}" class="error" th:text="${error}"></div>
+</div>
+</body>
+</html>
